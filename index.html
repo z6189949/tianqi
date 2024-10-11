@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>未来几天目的地温度折线图</title>
+    <title>未来几天目的地详细天气信息</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
     <style>
         body {
             display: flex;
@@ -13,15 +14,39 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
         #chart-container {
-            width: 90%;
-            max-width: 900px;
+            width: 95%;
+            max-width: 1200px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .weather-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .weather-item {
+            text-align: center;
+            margin: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .weather-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div id="chart-container">
+        <div class="weather-info" id="weatherInfo"></div>
         <canvas id="temperatureChart"></canvas>
     </div>
 
@@ -30,7 +55,43 @@
         
         const cities = ['北京', '莫斯科', '莫斯科', '加里宁格勒', '加里宁格勒', '阿拉木图', '阿拉木图', '乌斯特卡', '乌斯特卡', '阿斯塔纳', '阿斯塔纳', '北京'];
         const dates = ['10/13', '10/13', '10/14', '10/14', '10/15', '10/16', '10/17', '10/17', '10/18', '10/18', '10/19', '10/20'];
-        
+        const weatherConditions = ['多云转阴', '阴转小雨', '阴', '阴转阵雨', '阵雨转阴', '阵雨', '晴转多云', '晴转多云', '小雨', '多云转中雨', '阵雨', '小雨'];
+        const windSpeeds = ['1级', '1-2级', '1级', '2级', '2级', '2级', '1级', '1-2级', '2-3级', '2-3级', '2-3级', '1级'];
+        const humidity = ['65%', '54%', '66%', '79%', '80%', '70%', '59%', '69%', '71%', '75%', '77%', '53%'];
+
+        const weatherIcons = {
+            '晴': '☀️',
+            '多云': '⛅',
+            '阴': '☁️',
+            '小雨': '🌦️',
+            '阵雨': '🌧️',
+            '中雨': '🌧️'
+        };
+
+        function getWeatherIcon(condition) {
+            for (const [key, value] of Object.entries(weatherIcons)) {
+                if (condition.includes(key)) {
+                    return value;
+                }
+            }
+            return '🌤️'; // 默认图标
+        }
+
+        const weatherInfoDiv = document.getElementById('weatherInfo');
+        dates.forEach((date, index) => {
+            const weatherItem = document.createElement('div');
+            weatherItem.className = 'weather-item';
+            weatherItem.innerHTML = `
+                <div class="weather-icon">${getWeatherIcon(weatherConditions[index])}</div>
+                <div>${cities[index]}</div>
+                <div>${date}</div>
+                <div>${weatherConditions[index]}</div>
+                <div>风速: ${windSpeeds[index]}</div>
+                <div>湿度: ${humidity[index]}</div>
+            `;
+            weatherInfoDiv.appendChild(weatherItem);
+        });
+
         const data = {
             labels: dates.map((date, index) => `${date}\n${cities[index]}`),
             datasets: [
@@ -59,7 +120,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: '未来几天目的地最高最低温度变化',
+                        text: '未来几天目的地温度变化及天气信息',
                         font: {
                             size: 18
                         }
@@ -75,8 +136,13 @@
                                 const index = context[0].dataIndex;
                                 return `${dates[index]} - ${cities[index]}`;
                             },
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.parsed.y}°C`;
+                            afterBody: function(context) {
+                                const index = context[0].dataIndex;
+                                return [
+                                    `天气: ${weatherConditions[index]}`,
+                                    `风速: ${windSpeeds[index]}`,
+                                    `湿度: ${humidity[index]}`
+                                ];
                             }
                         }
                     }
