@@ -22,23 +22,23 @@
         }
         .weather-info {
     display: flex;
-    overflow-x: auto;
+    flex-wrap: wrap; /* 允许内容换行 */
+    justify-content: space-between; /* 内容两端对齐，分布均匀 */
     margin-bottom: 20px;
     padding-bottom: 10px;
-    max-width: 100%; /* 确保内容不会超过屏幕宽度 */
 }
 
 .weather-item {
-    flex: 0 0 auto;
-    width: 120px;
+    flex: 1 1 120px; /* 允许项目自动调整大小，最小宽度为120px */
     text-align: center;
     margin-right: 10px;
+    margin-bottom: 10px; /* 增加底部外边距，使换行后元素间距更好 */
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    min-width: 100px; /* 增加最小宽度 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 
         .weather-icon {
             font-size: 24px;
