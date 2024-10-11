@@ -5,20 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>未来几天目的地详细天气信息</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
             background-color: #f0f0f0;
         }
         #chart-container {
-            width: 95%;
-            max-width: 1200px;
+            max-width: 1000px;
+            margin: 0 auto;
             background-color: white;
             padding: 20px;
             border-radius: 10px;
@@ -26,13 +22,15 @@
         }
         .weather-info {
             display: flex;
-            justify-content: space-around;
+            overflow-x: auto;
             margin-bottom: 20px;
-            flex-wrap: wrap;
+            padding-bottom: 10px;
         }
         .weather-item {
+            flex: 0 0 auto;
+            width: 120px;
             text-align: center;
-            margin: 10px;
+            margin-right: 10px;
             padding: 10px;
             background-color: #f9f9f9;
             border-radius: 5px;
@@ -42,17 +40,22 @@
             font-size: 24px;
             margin-bottom: 5px;
         }
+        .chart-wrapper {
+            position: relative;
+            height: 60vh;
+        }
     </style>
 </head>
 <body>
     <div id="chart-container">
+        <h2 style="text-align: center;">未来几天目的地温度变化及天气信息</h2>
         <div class="weather-info" id="weatherInfo"></div>
-        <canvas id="temperatureChart"></canvas>
+        <div class="chart-wrapper">
+            <canvas id="temperatureChart"></canvas>
+        </div>
     </div>
 
     <script>
-        const ctx = document.getElementById('temperatureChart').getContext('2d');
-        
         const cities = ['北京', '莫斯科', '莫斯科', '加里宁格勒', '加里宁格勒', '阿拉木图', '阿拉木图', '乌斯特卡', '乌斯特卡', '阿斯塔纳', '阿斯塔纳', '北京'];
         const dates = ['10/13', '10/13', '10/14', '10/14', '10/15', '10/16', '10/17', '10/17', '10/18', '10/18', '10/19', '10/20'];
         const weatherConditions = ['多云转阴', '阴转小雨', '阴', '阴转阵雨', '阵雨转阴', '阵雨', '晴转多云', '晴转多云', '小雨', '多云转中雨', '阵雨', '小雨'];
@@ -92,6 +95,7 @@
             weatherInfoDiv.appendChild(weatherItem);
         });
 
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
         const data = {
             labels: dates.map((date, index) => `${date}\n${cities[index]}`),
             datasets: [
@@ -117,14 +121,8 @@
             data: data,
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    title: {
-                        display: true,
-                        text: '未来几天目的地温度变化及天气信息',
-                        font: {
-                            size: 18
-                        }
-                    },
                     legend: {
                         position: 'top',
                     },
