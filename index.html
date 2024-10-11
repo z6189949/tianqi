@@ -21,21 +21,25 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .weather-info {
-            display: flex;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-        .weather-item {
-            flex: 0 0 auto;
-            width: 120px;
-            text-align: center;
-            margin-right: 10px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    max-width: 100%; /* 确保内容不会超过屏幕宽度 */
+}
+
+.weather-item {
+    flex: 0 0 auto;
+    width: 120px;
+    text-align: center;
+    margin-right: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    min-width: 100px; /* 增加最小宽度 */
+}
+
         .weather-icon {
             font-size: 24px;
             margin-bottom: 5px;
